@@ -1,10 +1,9 @@
 package org.threeveed.spouts;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.File;
 import java.util.Map;
+
+import org.apache.commons.io.FilenameUtils;
 
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
@@ -17,38 +16,28 @@ public class LineReaderSpout implements IRichSpout {
     private static final long serialVersionUID = 1L;
     
     private SpoutOutputCollector collector;
-    private FileReader fileReader;
     private boolean completed = false;
     private TopologyContext context;
+    private String inputDir;
 
     @Override
     public void open(Map conf, TopologyContext context,
             SpoutOutputCollector collector) {
-        try {
-            this.context = context;
-            this.fileReader = new FileReader(conf.get("inputFile").toString());
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Error reading file "
-                    + conf.get("inputFile"));
-        }
+        
+        this.context = context;
+        this.inputDir = conf.get("inputFile").toString();
         this.collector = collector;
     }
 
     @Override
     public void nextTuple() {
         if (completed) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-
-            }
+            return;
         }
-        String str;
-        BufferedReader reader = new BufferedReader(fileReader);
+        
         try {
-            while ((str = reader.readLine()) != null) {
-                this.collector.emit(new Values(str), str);
-            }
+            File f = new File(inputDir);
+            emitFile(f);
         } catch (Exception e) {
             throw new RuntimeException("Error reading typle", e);
         } finally {
@@ -57,18 +46,30 @@ public class LineReaderSpout implements IRichSpout {
 
     }
 
+    private void emitFile(File file) {
+        if (file.isDirectory()) {
+            String[] filesInDir = file.list();
+            for (String fileInDir : filesInDir) {
+                String name = file.getAbsolutePath() + File.pathSeparator + fileInDir;
+                File newFile = new File(name);
+                emitFile(newFile);
+            }
+        } else {
+            String fileName = file.getAbsolutePath();
+            String ext = FilenameUtils.getExtension(fileName);
+            if ("eml".equalsIgnoreCase(ext)) {
+                this.collector.emit(new Values(fileName));
+            }
+        }
+    }
+    
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("line"));
+        declarer.declare(new Fields("file"));
     }
 
     @Override
     public void close() {
-        try {
-            fileReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public boolean isDistributed() {
