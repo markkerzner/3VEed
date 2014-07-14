@@ -20,13 +20,14 @@ import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 
-public class WordSpitterBolt implements IRichBolt {
+public class ThreeVEedEmlBolt implements IRichBolt {
     private static final long serialVersionUID = 1L;
     
     private OutputCollector collector;
     private Tika tika;
     private String inputDir;
     private SolrIndex solrIndex;
+    private String custodian;
     
     @Override
     public void prepare(Map stormConf, TopologyContext context,
@@ -38,6 +39,7 @@ public class WordSpitterBolt implements IRichBolt {
         inputDir = stormConf.get("inputFile").toString();
         String solrUrl = stormConf.get("solrUrl").toString();
         String caseId = stormConf.get("caseId").toString();
+        custodian = stormConf.get("custodian").toString();
         
         solrIndex = new SolrIndex(solrUrl, caseId);
     }
@@ -63,7 +65,7 @@ public class WordSpitterBolt implements IRichBolt {
             parseDateTimeReceivedFields(metadata);
             parseDateTimeSentFields(metadata, emlParser.getSentDate());
             
-            metadata.setCustodian("Ivan");
+            metadata.setCustodian(custodian);
             
             solrIndex.addData(metadata);
         } catch (Exception e) {

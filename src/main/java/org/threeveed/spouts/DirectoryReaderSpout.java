@@ -12,7 +12,7 @@ import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
-public class LineReaderSpout implements IRichSpout {
+public class DirectoryReaderSpout implements IRichSpout {
     private static final long serialVersionUID = 1L;
     
     private SpoutOutputCollector collector;
@@ -39,7 +39,7 @@ public class LineReaderSpout implements IRichSpout {
             File f = new File(inputDir);
             emitFile(f);
         } catch (Exception e) {
-            throw new RuntimeException("Error reading typle", e);
+            throw new RuntimeException("Error reading tuple", e);
         } finally {
             completed = true;
         }
@@ -50,7 +50,7 @@ public class LineReaderSpout implements IRichSpout {
         if (file.isDirectory()) {
             String[] filesInDir = file.list();
             for (String fileInDir : filesInDir) {
-                String name = file.getAbsolutePath() + File.pathSeparator + fileInDir;
+                String name = file.getAbsolutePath() + File.separator + fileInDir;
                 File newFile = new File(name);
                 emitFile(newFile);
             }
