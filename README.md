@@ -10,7 +10,7 @@ that can bite a chunk of work and give the rest to its peer. This will achieve t
 * Dynamic data sources cannot be integrated into Hadoop or Hive. We need not only to add data sources with ease, 
 but also accept new documents coming in real time (think emails and MS Exchange).
 
-The 3VEed projects aims to achieve these goals.
+The 3VEed project aims to achieve these goals.
 
 It is based on Apache Storm. The first practical use case is eDiscovery, where you have files of all sizes and types that do not fit batch paradigm.
 Hence the name, which stands for 3V Electronic Evidence Discovery. However, it will work for multiple types of loads and applications. 
