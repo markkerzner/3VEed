@@ -1,7 +1,8 @@
 3VEed
 =====
 
-This project is for processing modern-day document streams, characterized by 3V's: variety, velocity and volume. 
+This project is for processing modern-day document streams, characterized by 3V's: variety, velocity and volume. It represents the first step in the IOT architecture, doing the document processing in real time.
+
 It solves the following problems:
 
 * Many document processing systems are distributed (think Hadoop), but this distribution is by batches. So if one node gets a 
@@ -18,7 +19,7 @@ The batch version of the same is called FreeEed and is found right here, https:/
 
 Capabilities (current and future)
 
-* processing 300+ file types using Tika
+* processing 1400+ file types using Tika
 * indexing text extracted from Office and other formats
 * OCR
 * search with Solr and Lucene
