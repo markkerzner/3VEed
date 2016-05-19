@@ -13,12 +13,13 @@ import org.threeveed.core.DocumentMetadata;
 import org.threeveed.core.EmlParser;
 import org.threeveed.core.SolrIndex;
 
-import backtype.storm.task.OutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.IRichBolt;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Tuple;
+
+import org.apache.storm.topology.IRichBolt;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.task.OutputCollector;
+import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Fields;
 
 public class ThreeVEedEmlBolt implements IRichBolt {
     private static final long serialVersionUID = 1L;
@@ -207,7 +208,6 @@ public class ThreeVEedEmlBolt implements IRichBolt {
             }
         }
     }
-    
     private String getOriginalDocumentPath(String fileName) {
         return fileName != null ? fileName.replace(inputDir, "") : "";
     }
